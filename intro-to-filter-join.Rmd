@@ -1,0 +1,105 @@
+---
+title: "Filter/joins (like VLOOKUP in Excel)"
+author: "Sean McKnight"
+date: "12/8/2019"
+output: html_document
+---
+
+## Attach Packages:
+
+tidyverse, readxl, here
+
+```{r, include = FALSE}
+library(tidyverse)
+library(readxl)
+library(here)
+```
+
+Read in 3 files: 
+
+- invert_counts_curated.xlsx
+- fish_counts_curated.csv
+- kelp_counts_curated.xlsx
+
+```{r}
+invert_counts <- read_xlsx(here("R-workshop-data/invert_counts_curated.xlsx" ))
+fish_counts <- read_csv(here("R-workshop-data/fish_counts_curated.csv" ))
+kelp_counts_abur <- read_xlsx(here("R-workshop-data/kelp_counts_curated.xlsx" ))
+```
+
+
+Notes: select vs filter:
+- select() function: keep, exclude or rearrange columns
+- filter() function: keeps or excludes ROWS (observations) basedon whether or no they match variable conditions
+
+## Filter to match rows based on character string
+
+Only keep observations from fish_counts where the common_name variable matches "garibaldi"
+
+
+```{r}
+fish_garibaldi <- fish_counts %>%
+  filter(common_name == "garibaldi") #in R, you double = when searching for something
+
+# use janitor::clean_names() to automatically update all of your column names to lowercase_snake_case
+```
+
+
+##Filter to keep/exclude observations based on numeric conditions
+
+create a subset where total_counts is >=50
+
+```{r}
+fish_over50 <- fish_counts %>%
+  filter(total_count >= 50)
+```
+
+
+Create a subset that only contains observations for fish at Mohawk Reef ("mohk"):
+```{r}
+fish_mohk <- fish_counts %>%
+  filter(site == "mohk")
+```
+
+
+## Filter to keep rows that match THIS OR THAT
+
+Example: We want tot keep any observations for garibaldi, blacksmith, or black surfperch
+
+Use the %in% operator to look for any matches within a vector c() is a vector
+
+```{r}
+# this is verymuch an OR statement
+fish_3sp <- fish_counts %>% 
+  filter(common_name %in% c("garibaldi","blacksmith","black surfperch"))
+
+# Writing OR statements explicity:
+# Use the vertical line | to indicate "or"
+fish_3sp_v2 <- fish_counts %>%
+  filter(common_name == "garibaldi" | common_name == "blacksmith" | common_name == "black surfperch")
+```
+
+
+## Filter to return rows that match conditions for MULTIPLE variables (AND statements)
+
+I want to create a subset called urchin_abur_mohk that only kees observations where: 
+
+- site is "abur" or "mohk" AND
+- species is "purple urchin"
+
+Some ways to do this: 
+
+- separate "AND" conditions within a signle filter line by a comma
+- separate "AND" conditions within a single filter line by an ampersand (&)
+- putting each filter condition within a separate filter line that are just piped together in sequence
+
+```{r}
+urchin_abur_mohk <- invert_counts %>%
+  filter(site %in% c("abur","mohk"), common_name == "purple urchin")
+
+urchin_abur_mohk2 <- invert_counts %>%
+  filter(site %in% c("abur","mohk") & common_name == "purple urchin")
+
+```
+
+
