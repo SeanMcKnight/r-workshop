@@ -436,6 +436,40 @@ fish_3sp_v2 &lt;- fish_counts %&gt;%
 
 urchin_abur_mohk2 &lt;- invert_counts %&gt;%
   filter(site %in% c(&quot;abur&quot;,&quot;mohk&quot;) &amp; common_name == &quot;purple urchin&quot;)</code></pre>
+<p>Activity: create a subset from fish_counts, called low_gb_rw that only contains:</p>
+<ul>
+<li>observations for ’garibaldi&quot; and “rock wrasse”</li>
+<li>where the total_count is LESS than 10 f</li>
+</ul>
+</div>
+<div id="filter-rows-that-do-not-match-conditions" class="section level2">
+<h2>Filter rows that DO NOT MATCH conditions</h2>
+<p>Use != (indicates “does NOT match”)</p>
+<p>Try to create a subset from fish_counts that does NOT contain observations for Mohawk Reef (“mohk”):</p>
+<pre class="r"><code>sans_mohk &lt;- fish_counts %&gt;%
+  filter(site != &quot;mohk&quot;)</code></pre>
+<p>An example of filter as part of a piped sequence:</p>
+<pre class="r"><code>senoria_allyears &lt;- fish_counts %&gt;%
+  filter(common_name == &quot;senorita&quot;) %&gt;%
+  group_by(site) %&gt;%
+  summarize(count_all_years = sum(total_count))</code></pre>
+</div>
+<div id="a-couple-ways-of-joining-data-frames" class="section level2">
+<h2>A couple ways of joining data frames</h2>
+<ul>
+<li><code>full_join()</code>: keeps everhting (safe join)</li>
+<li><code>left_join()</code>: if we are merging A and B, will only retain observations from B that have matches in A</li>
+</ul>
+<pre class="r"><code>fish_2016_2017 &lt;- fish_counts %&gt;%
+  filter(year == 2016 | year == 2017)</code></pre>
+<p>Join that dataframe with kelp_counts_abur:</p>
+<pre class="r"><code># abur_kelp_join &lt;- fish_2016_2017 %&gt;%
+#   full_join(kelp_count_abur, by = c(&quot;year&quot;,&quot;site&quot;))</code></pre>
+<pre class="r"><code>kelp_counts_abur &lt;- kelp_counts_abur %&gt;%
+  mutate(year = as.numeric(year))</code></pre>
+<p>Now we can join them:</p>
+<pre class="r"><code>abur_kelp_join &lt;- fish_2016_2017 %&gt;%
+  full_join(kelp_counts_abur, by = c(&quot;year&quot;,&quot;site&quot;))</code></pre>
 </div>
 
 
