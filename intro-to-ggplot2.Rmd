@@ -1,0 +1,106 @@
+---
+title: "intro-to-ggplot2"
+author: "Sean McKnight"
+date: "12/8/2019"
+output: html_document
+---
+
+##Attach packages
+```{r}
+library(tidyverse)
+library(readxl)
+library(here)
+```
+
+##Read in the data
+```{r}
+#use here() to indicate subfolder
+ca_np <- read_csv(here("R-workshop-data","ca_np.csv"))
+
+ci_np <- read_xlsx(here("R-workshop-data","ci_np.xlsx"))
+```
+
+
+## Make a graph w/ ggplot2
+
+Need three things:
+
+1. Tell R wer're using `ggplot`
+2. Tell R what data we're using, and what variables we want to plot
+3. What type of graph we're creating (geom)
+
+```{r, eval = FALSE}
+#eval = FALSE means the code won't run
+#these are the basics of having a minimal viable graph
+
+ggplot(data = THIS, aes(x = THIS, y = THIS)) + 
+  geom_THIS()
+```
+
+Now let's create a graph of CI visitation:
+```{r}
+#aes = aesthetic
+#for ggplot, use the vertical structure with plus signs, the plus sign adds indents
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_line()
+
+```
+
+## try a scater plot
+
+```{r}
+#copy from above and change geom
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_point()
+```
+
+## Create a column graph with this data
+
+```{r}
+#col = column / bar chart
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_col()
+```
+
+## Create an area graph with this data
+```{r}
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_area()
+```
+
+
+## Intro to customozing  `ggplot` graphs
+- color = (update point or line color)
+- fill = (update the fill characteristics of anelement)
+- linetype =
+- pch = (value)
+- size = 
+- alpha = 
+
+```{r}
+#change elements of the graph within geom
+#only change aes are only the variables. 
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_line(color = "coral4",
+            linetype = "dashed")
+```
+
+```{r}
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_point (color = "blue",
+            pch = 17,
+            size = 4,
+            alpha = 0.5)
+```
+
+I have some awesome text here, and below is my amazing final graph:
+```{r, echo = FALSE}
+#alpha = transparancy, values between 0 and 1. Closer to 0 = more transparent, closer to 1 = less transparent
+# echo = FALSE is hiding the code in the markdown
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_point (color = "blue",
+            pch = 18,
+            size = 4,
+            alpha = 0.5)
+```
+
