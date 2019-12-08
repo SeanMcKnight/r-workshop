@@ -86,6 +86,7 @@ ggplot(data = ci_np, aes(x = year, y = visitors)) +
 ```
 
 ```{r}
+#pch = symbol type
 ggplot(data = ci_np, aes(x = year, y = visitors)) +
   geom_point (color = "blue",
             pch = 17,
@@ -102,5 +103,105 @@ ggplot(data = ci_np, aes(x = year, y = visitors)) +
             pch = 18,
             size = 4,
             alpha = 0.5)
+```
+
+
+## Customize elements based on variable values or outcomes
+
+```{r}
+# create bubble plot (look cool, but are often just confusing)
+# if your aes is based on a variable, you have to embed that in the geom 
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_point(aes(size = visitors,
+                 color = visitors),
+             pch = 17,
+             alpha = 0.8) 
+```
+
+For this activity, create a column plot of CINP visitaiton over time, where the fill color changes based on the number of visitors, and the outline color (color = ) is "magenta"
+
+```{r}
+# the fill color is based on a variable, so it is inside aes, the outline color is outside the aes b/c it's not based on a variable.
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_col(aes(fill = visitors),
+           color = "magenta")
+
+```
+
+
+```{r}
+# The theme_THIS is how you adjust the background, you can create your own specific theme like theme_sean and apply that any time you make a graph
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_line(size = 3,
+            color = "red") +
+  theme_get()
+```
+
+
+```{r}
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_point(size = 1,
+            color = "navy") +
+  theme_minimal() +
+  labs (x = "My x-axis title",
+        y = "Annual visotors",
+        title = "Channel Islands NP Visitation",
+        subtitle = "(1963 - 2016")
+```
+
+## Combine compatible geoms
+
+Example: Add a point plot on top of a line plot: 
+
+```{r}
+# whatever comes first will be farthest back
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_line(color = "purple") +
+  geom_point(color = "magenta",
+             aes(size = year))
+  theme_minimal()
+```
+
+
+Create a combined column graph + line graph of visitation. 
+
+```{r}
+# 
+ggplot(data = ci_np, aes(x = year, y = visitors)) +
+  geom_col()+
+  geom_line(color = "navy",
+            size = 2,
+            alpha = 0.8)
+  theme_minimal()
+```
+
+
+##Create a line graph with multiple series
+
+```{r}
+#color = park_name is another variable, and R knows that there are variables.
+ggplot(data = ca_np, aes(x = year, y = visitors, color = park_name)) +
+  geom_line()
+```
+
+## Faceting ggplot graphs
+
+- each series (group) gets its own plot panel
+
+```{r}
+# the facet wrap
+# show 
+ggplot(data = ca_np, aes(x = year, y = visitors, color = park_name)) +
+  geom_line(show.legend = FALSE) +
+  facet_wrap(~ park_name)+
+  theme_minimal()
+
+```
+
+## Use ggsave to export a plot
+
+```{r}
+#this will save the most recent graph, you cold save call a specific graph
+ggsave("np_graph.png", dpi = 180, width = 8, height = 7)
 ```
 
